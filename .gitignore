@@ -1,0 +1,8 @@
+*.xml
+.idea/.name
+.idea/encodings.xml
+.idea/encodings.xml
+.idea/vcs.xml
+.idea/vcs.xml
+*.pyc
+*.log
