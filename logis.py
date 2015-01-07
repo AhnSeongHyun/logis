@@ -60,9 +60,8 @@ class BasicLog():
     """
     Goal : class to json
     """
-    type = None
     def __init__(self):
-        self.type = self.__class__.__name__
+        pass
 
     def toJson(self):
         return json.dumps(vars(self), sort_keys=True, indent=4)
@@ -162,7 +161,7 @@ def time(func):
     return newFunc
 
 
-def web(func):
+def flask(func):
     @functools.wraps(func)
     def newFunc(*args, **kwargs):
         result = None
