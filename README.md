@@ -10,8 +10,12 @@ logis(log is..)
 ```python
 import logis
 # default is stdout.
+
 logis.addFileLogger() 
 # add file log. default path is ./logis.log
+
+logis.setPretty(True) 
+# set pretty mode (True|False:default)
 ```
 
 #### Use in flask 
@@ -157,6 +161,29 @@ def error():
     "time": "2015-01-07 13:44:09.356000", 
     "traceback": "Traceback (most recent call last):...
 }
+```
+#### setPretty 
+```python 
+logis.setPretty(True) 
+```
+
+```
+True Case
+2015-03-27 15:16:29,395 INFO    {
+    "date": "2015-03-27 15:16:29.395482", 
+    "method": "GET", 
+    "requestData": "", 
+    "sourceIp": "121.157.163.130", 
+    "url": "/", 
+    "userAgent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.101 Safari/537.36"
+}
+```
+
+```
+False Case
+2015-03-27 15:16:29,395 INFO    {"url":"\/login","requestData":"next=http%3A%2F%2Fash84.net%2F","
+date":"2015-03-27 15:17:34.050210","userAgent":"Mozilla\/5.0 (Windows NT 6.1; WOW64) 
+AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/41.0.2272.101 Safari\/537.36","sourceIp":"121.157.163.130","method":"GET"}
 ```
 
 ### License

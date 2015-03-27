@@ -6,9 +6,11 @@ from logging import handlers
 import inspect
 import functools
 import datetime
-import json
+
 import os
 from flask import request
+
+
 
 """ LogLevel """
 
@@ -46,6 +48,8 @@ logging.basicConfig(level=logging.INFO, format=log_format)
 logger = logging.getLogger('logis')
 logger.setLevel(logging.DEBUG)
 
+__is_pretty__ = False
+
 def addFileLogger(filename=os.path.join(os.path.dirname(os.path.abspath(__file__)) , "logis.log")):
     file_handler = handlers.TimedRotatingFileHandler(filename=filename, when='D', interval=1)
     file_handler.formatter = logging.Formatter(log_format)
@@ -53,6 +57,14 @@ def addFileLogger(filename=os.path.join(os.path.dirname(os.path.abspath(__file__
 
 def setLevel(level):
     logger.setLevel(level)
+
+def setPretty(pretty):
+    global __is_pretty__
+    if pretty:
+        __is_pretty__ = True
+    else:
+        __is_pretty__ = False
+
 
 """ LogClass """
 
@@ -64,8 +76,22 @@ class BasicLog():
         pass
 
     def toJson(self):
-        return json.dumps(vars(self), sort_keys=True, indent=4)
- 
+        global __is_pretty__
+
+        if __is_pretty__:
+            import json
+        else:
+            try:
+                import ujson as json
+            except:
+                import json
+
+        if __is_pretty__:
+            return json.dumps(vars(self), sort_keys=True, indent=4)
+        else:
+            return json.dumps(vars(self))
+
+
 
 class WebLog(BasicLog):
     sourceIp = None
@@ -82,7 +108,7 @@ class WebLog(BasicLog):
         self.requestData = requestData
         self.method = method
         self.userAgent = userAgent
-        self.date = str(date) 
+        self.date = str(date)
 
 class LogicLog(BasicLog):
     function = None
@@ -178,12 +204,12 @@ def flask(func):
         from urlparse import urlparse
 
         logger.info(
-        WebLog(sourceIp=request.remote_addr,
-                    url=urlparse(request.url).path,
-                    requestData=requestData,
-                    method=m,
-                    userAgent=str(request.user_agent),
-                    date=datetime.datetime.now()).toJson())
+            WebLog(sourceIp=request.remote_addr,
+                   url=urlparse(request.url).path,
+                   requestData=requestData,
+                   method=m,
+                   userAgent=str(request.user_agent),
+                   date=datetime.datetime.now()).toJson())
 
         try:
             result = func(*args, **kwargs)
@@ -197,7 +223,7 @@ def flask(func):
         return result
     return newFunc
 
- 
+
 
 def func(func):
     """
